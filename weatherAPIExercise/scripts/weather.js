@@ -45,7 +45,7 @@ function addIcon(weather) {
 
 // adds whatever data is passed to the weather div
 function addToWeather(data) {
-
+    get(URL)
 }
 
 // creates map showing lat long of weather info
@@ -61,10 +61,10 @@ function addMap(weather) {
 
     // create iframe and set attributes
     const iframe = document.createElement('iframe');
+    // changes height and width
     iframe.height = 400;
     iframe.width = 400;
     iframe.src = mapUrl
-
 
     weatherDiv.append(iframe);
 }
@@ -85,28 +85,28 @@ function sunInfo(weather) {
 }
 
 // add correctly formatted dates to the page
-function formatDate(date) {
+function formatDate(getDate) {
 
-    let d = new Date(0);
-    d.setUTCSeconds(date);
+    let date = new Date(0);
+    date.setUTCSeconds(getDate);
 
     // Get the year
-    const year = d.getFullYear()
+    const year = date.getFullYear()
 
     // Get the month
-    const month = d.getMonth() + 1;
+    const month = date.getMonth() + 1;
 
     // Get the day
-    const day = d.getDate();
+    const day = date.getDate();
 
     // Get the hours
-    const hours = d.getHours();
+    const hours = date.getHours();
 
     // Get the minutes
-    let minutes =  d.getMinutes();
+    let minutes =  date.getMinutes();
 
     // Get seconds
-    let seconds = d.getSeconds();
+    let seconds = date.getSeconds();
 
     // Return the date and time...
     return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`
@@ -125,11 +125,10 @@ function get(url){
             addLocationName(data);
             addTemp(data);
             addWind(data);
-            addToWeather(data);
             addMap(data);
             sunInfo(data);
         })
         .catch(err => err)
 }
 
-get(URL)
+addToWeather()

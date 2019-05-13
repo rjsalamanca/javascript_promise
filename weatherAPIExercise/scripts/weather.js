@@ -1,17 +1,28 @@
-const weatherDiv = document.querySelector('[data-weather]');
+const weatherDiv = document.getElementById('weather');
 
 // Append location name to the weather div
 function addLocationName(weather) {
+    const locationHeader = document.createElement('h2');
+    locationHeader.textContent = `Location: ${weather.name}`;
+    weatherDiv.append(locationHeader);
     console.log(`Location: ${weather.name}`)
 }
 
 // Add temperature to weather div
 function addTemp(weather) {
-    console.log(`Temperature: ${weather.main.temp}`)
+    const temp = Math.floor((9/5) * (weather.main.temp - 273) + 32)
+    const tempHeader = document.createElement('h2');
+    tempHeader.textContent = `Temperature: ${temp}`;
+    weatherDiv.append(tempHeader);
+    console.log(`Temperature: ${temp}`)
 }
 
 // Add wind speed to weather div
 function addWind(weather) {
+
+    const windHeader = document.createElement('h2');
+    windHeader.textContent = `Wind speed(mph): ${weather.wind.speed}`;
+    weatherDiv.append(windHeader);
     console.log(`Wind speed(mph) ${weather.wind.speed}`)
 }
 
@@ -19,18 +30,19 @@ function addWind(weather) {
 function addIcon(weather) {
     // get icon code from object
     const iconCode = weather.weather[0].icon;
-    console.log(iconCode)
+    console.log(`Icon Code: ${iconCode}`)
     // Use the icon code to get the icon using OpenWeatherMap.org
     const iconUrl = `http://openweathermap.org/img/w/${iconCode}.png`;
 
     // Create a new image element using the iconUrl
-
+    const image = document.createElement('img');
+    image.src = iconUrl
     // Add the weather conditions to an h2 element
 
     // Append the text and image to the weatherDiv
-
-
+    weatherDiv.append(image)
 }
+
 // adds whatever data is passed to the weather div
 function addToWeather(data) {
 
@@ -42,54 +54,60 @@ function addMap(weather) {
     const lat = weather.coord.lat;
     const lon = weather.coord.lon;
 
-    console.log(lat)
-    console.log(lon)
+    console.log(`Latitude: ${lat}`)
+    console.log(`Longitude: ${lon}`)
     // Use the Lat/Long to create a map
     const mapUrl = `http://maps.google.com/maps?q=${lat},${lon}&output=embed`;
 
     // create iframe and set attributes
     const iframe = document.createElement('iframe');
+    iframe.src = mapUrl
 
+
+    weatherDiv.append(iframe);
 }
 
 function sunInfo(weather) {
     // get sunrise and sunset info
-    const sunset = weather.sys.sunset;
-    const sunrise = weather.sys.sunrise;
+    const sunrise = formatDate(weather.sys.sunrise);
+    const sunset = formatDate(weather.sys.sunset);
+    const sunriseHeader = document.createElement('h2');
+    const sunsetHeader = document.createElement('h2');
 
-    // convert to standard date format
-    console.log(formatDate(sunset))
-    console.log('fuck')
+    sunriseHeader.textContent = sunrise;
+    sunsetHeader.textContent = sunset;
+
+    weatherDiv.append(sunriseHeader);
+    weatherDiv.append(sunsetHeader);
+
 }
 
 // add correctly formatted dates to the page
 function formatDate(date) {
-    // Get the date
-    const day = date.getDate();
+
+    let d = new Date(0);
+    d.setUTCSeconds(date);
+
+    // Get the year
+    const year = d.getFullYear()
 
     // Get the month
-    // month starts at 0
-    const month = date.getMonth() + 1;
-    console.log(month);
+    const month = d.getMonth() + 1;
+
+    // Get the day
+    const day = d.getDate();
 
     // Get the hours
-    const hours = date.getHours();
+    const hours = d.getHours();
 
     // Get the minutes
-    let minutes =  date.getMinutes();
+    let minutes =  d.getMinutes();
 
-    // if statement to reformat minutes
-    // from a single digit to a two digit with a leading zero
-    // i.e. change "1" to "01"
-    
     // Get seconds
-
-    // Format the time in a friendly format
-
-    // Format the date in a friendly format
+    let seconds = d.getSeconds();
 
     // Return the date and time...
-    return
+    return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`
 }
 
 // Use the below URL to make a fetch request, 
@@ -101,10 +119,10 @@ function get(url){
         .then(response => response.json())
         .then(data =>{
             console.log(data);
+            addIcon(data);
             addLocationName(data);
             addTemp(data);
             addWind(data);
-            addIcon(data);
             addToWeather(data);
             addMap(data);
             sunInfo(data);

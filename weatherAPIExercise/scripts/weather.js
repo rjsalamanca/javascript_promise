@@ -61,6 +61,8 @@ function addMap(weather) {
 
     // create iframe and set attributes
     const iframe = document.createElement('iframe');
+    iframe.height = 400;
+    iframe.width = 400;
     iframe.src = mapUrl
 
 
